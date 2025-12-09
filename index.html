@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dank Santa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- MAIN STYLES -->
+  <style>
+    :root {
+      --bg: #050712;
+      --bg-soft: #101322;
+      --accent-red: #ff3b4e;
+      --accent-green: #47ff9a;
+      --accent-gold: #ffd86b;
+      --accent-blue: #64b5ff;
+      --text: #f9fafb;
+      --muted: #a3a7c2;
+      --border-soft: rgba(255,255,255,0.12);
+      --card-radius: 18px;
+      --shadow-soft: 0 18px 40px rgba(0,0,0,0.6);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro", sans-serif;
+      background: radial-gradient(circle at top, #18203a 0, #050712 60%);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: var(--accent-green);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .glow-text {
+      text-shadow: 0 0 12px rgba(255,255,255,0.18);
+    }
+
+    .layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 90px 16px 80px;
+    }
+
+    /* NAVBAR */
+
+    .nav {
+      position: fixed;
+      inset-inline: 0;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to bottom,
+                rgba(5,7,18,0.92),
+                rgba(5,7,18,0.75),
+                transparent);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff 0, #ff3b4e 45%, #a80032 100%);
+      border: 3px solid #fff;
+      box-shadow: 0 0 20px rgba(255,59,78,0.7);
+    }
+
+    .nav-title {
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-size: 15px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 4px;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-red), var(--accent-green));
+      transition: width 0.2s ease-out;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.17), rgba(255,255,255,0.03));
+      padding: 8px 18px;
+      font-size: 13px;
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.16s ease-out;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      border-color: rgba(255,255,255,0.4);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #ff3b4e, #ff7a3b);
+      border-color: rgba(255,255,255,0.25);
+      box-shadow: 0 12px 25px rgba(255,59,78,0.65);
+    }
+
+    .btn-ghost {
+      background: rgba(15,20,40,0.9);
+    }
+
+    .wallet-status {
+      font-size: 11px;
+      color: var(--muted);
+      max-width: 150px;
+      text-align: right;
+    }
+
+    /* HERO / INTRO */
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 32px;
+      align-items: center;
+      margin-bottom: 60px;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .hero-copy h1 {
+      font-size: 34px;
+      line-height: 1.05;
+      margin: 0 0 12px;
+    }
+
+    .hero-copy h1 span {
+      background: linear-gradient(120deg, #ff3b4e, #ffd86b, #47ff9a);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+      margin-bottom: 14px;
+      background: rgba(10,14,32,0.9);
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 460px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .hero-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-card {
+      background: radial-gradient(circle at 20% 0, rgba(255,255,255,0.06), rgba(15,20,40,1));
+      border-radius: var(--card-radius);
+      padding: 18px;
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: -50%;
+      background-image: radial-gradient(circle at 0 0, rgba(255,255,255,0.09) 0, transparent 45%),
+                        radial-gradient(circle at 100% 0, rgba(255,59,78,0.4) 0, transparent 60%),
+                        radial-gradient(circle at 100% 100%, rgba(100,181,255,0.35) 0, transparent 55%);
+      opacity: 0.7;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .hero-card-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ca-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    .ca-box {
+      margin-top: 4px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(3,5,18,0.9);
+      border: 1px solid rgba(255,255,255,0.16);
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .ca-box span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .badge-pill {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--muted);
+    }
+
+    .hero-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .hero-links a {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(5,7,18,0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* SECTIONS */
+
+    section {
+      margin-bottom: 60px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-header p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .section-tag {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .section-card {
+      background: rgba(6,10,32,0.96);
+      border-radius: var(--card-radius);
+      border: 1px solid var(--border-soft);
+      padding: 18px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background-image: radial-gradient(circle at 0 0, rgba(255,255,255,0.06) 0, transparent 50%),
+                        radial-gradient(circle at 100% 0, rgba(71,255,154,0.22) 0, transparent 60%);
+      opacity: 0.5;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .section-card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* PICTURE WITH DANK SANTA */
+
+    .picture-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .picture-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .picture-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .upload-box {
+      border-radius: 12px;
+      border: 1px dashed rgba(255,255,255,0.4);
+      padding: 14px;
+      text-align: center;
+      font-size: 13px;
+      background: rgba(7,10,30,0.95);
+    }
+
+    .upload-box input[type="file"] {
+      display: none;
+    }
+
+    .upload-hint {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .pill {
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .status-text {
+      font-size: 12px;
+      color: var(--muted);
+      min-height: 16px;
+    }
+
+    .picture-preview {
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: radial-gradient(circle at top, rgba(255,255,255,0.06), rgba(4,6,22,1));
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .picture-preview canvas,
+    .picture-preview img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 12px;
+    }
+
+    /* NFT SECTION */
+
+    .nft-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .nft-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .nft-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .nft-links a {
+      font-size: 13px;
+    }
+
+    .nft-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .nft-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 10px;
+      font-size: 11px;
+    }
+
+    .nft-card {
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(10,15,35,0.96);
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .nft-card img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+    }
+
+    .nft-card-body {
+      padding: 6px 8px 8px;
+    }
+
+    .nft-card-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .nft-card-owner {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    /* WHEEL SECTION */
+
+    .wheel-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .wheel-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .wheel-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .wheel-outer {
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      border: 8px solid rgba(255,255,255,0.35);
+      background: radial-gradient(circle at 30% 0, #fff 0, #ffd86b 30%, #a7002a 80%);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wheel-inner {
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      background: conic-gradient(
+        from -90deg,
+        #ff3b4e 0 120deg,
+        #2ad68f 120deg 240deg,
+        #7c4dff 240deg 360deg
+      );
+      transition: transform 3s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .wheel-center {
+      position: absolute;
+      inset: 55px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 20% 20%, #fff 0, #ffb74d 40%, #ff3b4e 100%);
+      border: 4px solid rgba(255,255,255,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: #3b0611;
+      text-shadow: 0 0 8px rgba(255,255,255,0.6);
+    }
+
+    .wheel-tick {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-bottom: 18px solid #ffd86b;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.7));
+    }
+
+    .wheel-labels {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .wheel-labels span {
+      position: absolute;
+      text-shadow: 0 0 8px rgba(0,0,0,0.8);
+    }
+
+    .wheel-labels .lbl-naughty {
+      top: 12%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .wheel-labels .lbl-nice {
+      bottom: 22%;
+      left: 15%;
+      transform: rotate(-40deg);
+    }
+
+    .wheel-labels .lbl-dank {
+      bottom: 22%;
+      right: 15%;
+      transform: rotate(40deg);
+    }
+
+    .wheel-controls {
+      width: 100%;
+      font-size: 13px;
+    }
+
+    .field-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+
+    .field-row label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .field-row input[type="number"] {
+      background: rgba(6,10,32,1);
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 6px 10px;
+      color: var(--text);
+      min-width: 120px;
+    }
+
+    .mode-pill {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(6,10,32,0.96);
+      color: var(--muted);
+    }
+
+    .wheel-status {
+      font-size: 12px;
+      color: var(--muted);
+      min-height: 18px;
+    }
+
+    .wheel-payouts {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .banner {
+      margin-top: 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(4,7,24,0.96);
+      overflow: hidden;
+      position: relative;
+      height: 32px;
+    }
+
+    .banner-track {
+      position: absolute;
+      white-space: nowrap;
+      display: inline-flex;
+      gap: 40px;
+      padding-inline: 16px;
+      animation: banner-scroll 24s linear infinite;
+      font-size: 12px;
+      align-items: center;
+    }
+
+    @keyframes banner-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .banner-item {
+      opacity: 0.9;
+    }
+
+    .banner-item span.addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      color: var(--accent-blue);
+    }
+
+    .banner-item span.result-naughty {
+      color: #ff7676;
+    }
+
+    .banner-item span.result-nice {
+      color: #47ff9a;
+    }
+
+    .banner-item span.result-dank {
+      color: #ffd86b;
+    }
+
+    /* FOOTER ETC */
+
+    footer {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    /* CLICK FX SPRITES */
+
+    .click-sprite {
+      position: fixed;
+      font-size: 26px;
+      pointer-events: none;
+      transform-origin: center;
+      animation: sprite-pop 0.9s ease-out forwards;
+      z-index: 60;
+    }
+
+    @keyframes sprite-pop {
+      0% {
+        opacity: 0;
+        transform: scale(0.4) translateY(10px);
+      }
+      30% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.3) translateY(-20px);
+      }
+    }
+
+    /* MUSIC WIDGET */
+
+    .music-widget {
+      font-size: 11px;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      padding: 4px 10px;
+      background: rgba(5,7,18,0.95);
+    }
+
+    .music-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 8px rgba(71,255,154,0.8);
+    }
+
+    .music-dot.paused {
+      background: #ff7676;
+      box-shadow: 0 0 8px rgba(255,118,118,0.8);
+    }
+
+    @media (max-width: 640px) {
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <div class="nav-logo"></div>
+        <div>
+          <div class="nav-title glow-text">DANK SANTA</div>
+          <div style="font-size:11px; color:var(--muted);">Naughty. Nice. <strong>Dank.</strong></div>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#hero">Home</a>
+        <a href="#picture-app">PFP Lab</a>
+        <a href="#nft-collection">NFTs</a>
+        <a href="#wheel-game">Wheel Game</a>
+      </nav>
+
+      <div class="nav-right">
+        <button class="btn btn-ghost" id="musicToggleBtn">
+          <span id="musicDot" class="music-dot paused"></span>
+          <span>Holiday vibes</span>
+        </button>
+        <button class="btn btn-primary" id="connectWalletBtn">
+          <span>Connect Wallet</span>
+        </button>
+        <div class="wallet-status" id="walletStatus">Not connected</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- HERO / INTRO -->
+    <section id="hero" class="hero">
+      <div class="hero-copy">
+        <div class="hero-tag">
+          <span>✨ Solana</span> · <span>Community-powered Christmas chaos</span>
+        </div>
+        <h1 class="glow-text">
+          Take a <span>Picture with Dank Santa</span> & spin the Naughty / Nice / Dank wheel.
+        </h1>
+        <p>
+          $DSANTA is the degen North Pole: custom AI PFPs with Dank Santa, on-chain wheel spins,
+          and a festive NFT collection. Connect your wallet, prove you’re a holder, and join the list.
+        </p>
+
+        <div class="hero-ctas">
+          <button class="btn btn-primary" onclick="scrollToSection('#picture-app')">Get my PFP</button>
+          <button class="btn btn-ghost" onclick="scrollToSection('#wheel-game')">Spin the Wheel</button>
+        </div>
+
+        <div class="hero-meta">
+          <span>🎄 <strong>$DSANTA</strong> holders unlock perks</span>
+          <span>🎁 PFP Lab · NFT Mint · On-chain Wheel</span>
+        </div>
+      </div>
+
+      <aside class="hero-card">
+        <div class="hero-card-inner">
+          <div>
+            <div class="ca-label">Contract Address</div>
+            <div class="ca-box" id="caBox" title="Click to copy">
+              <!-- Replace with real CA when ready -->
+              <span id="caText">CA PENDING – COMING SOON</span>
+              <span>📋</span>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
+            <span class="badge-pill">Solana · SPL Token</span>
+            <span class="badge-pill">Holder perks @ 150,000 $DSANTA</span>
+          </div>
+
+          <div class="hero-links" style="margin-top:12px;">
+            <!-- Replace href with real links when ready -->
+            <a href="#" target="_blank" rel="noopener">📈 View Chart</a>
+            <a href="#" target="_blank" rel="noopener">🛒 Buy $DSANTA</a>
+            <a href="#nft-collection">🧊 NFT Collection</a>
+          </div>
+
+          <p style="font-size:11px; color:var(--muted); margin-top:10px;">
+            Tip: click the CA to copy it to your clipboard and ape safely.
+          </p>
+        </div>
+      </aside>
+    </section>
+
+    <!-- PICTURE WITH DANK SANTA APP -->
+    <section id="picture-app">
+      <div class="section-header">
+        <div>
+          <div class="section-tag">Holder Utility</div>
+          <h2>Picture with Dank Santa PFP Lab 🎅</h2>
+        </div>
+        <p>Upload your photo, let the elves work, and export a PFP-ready shot with Dank Santa.</p>
+      </div>
+
+      <div class="section-card">
+        <div class="section-card-inner">
+          <div class="picture-grid">
+            <div class="picture-controls">
+              <div class="pill-row">
+                <span class="pill">Requires wallet connection</span>
+                <span class="pill">Min balance: 150,000 $DSANTA</span>
+              </div>
+
+              <div class="upload-box" id="uploadBox">
+                <p style="margin:0 0 4px;"><strong>Upload your photo</strong></p>
+                <p style="margin:0; font-size:12px; color:var(--muted);">
+                  Face-forward selfie works best. JPG or PNG under 10MB.
+                </p>
+                <button class="btn btn-ghost" style="margin-top:10px;" id="uploadBtn">
+                  Choose file
+                </button>
+                <input type="file" id="fileInput" accept="image/*" />
+                <div class="upload-hint" id="uploadHint">No file selected yet.</div>
+              </div>
+
+              <div class="field-row">
+                <label>Style:</label>
+                <select id="pfpStyle" style="background:#060a20; border-radius:999px; border:1px solid rgba(255,255,255,0.2); padding:6px 10px; color:var(--text);">
+                  <option value="classic">Classic Dank Santa</option>
+                  <option value="icy">Icy Halo Santa</option>
+                  <option value="golden">Golden Star Halo</option>
+                  <option value="stunner">Dank sunglasses edition</option>
+                </select>
+              </div>
+
+              <button class="btn btn-primary" id="generatePfpBtn">
+                Generate my PFP with Dank Santa
+              </button>
+
+              <div class="status-text" id="pfpStatus">
+                Connect your wallet and hold 150,000 $DSANTA to unlock.
+              </div>
+
+              <p style="font-size:11px; color:var(--muted); margin-top:4px;">
+                Note: this button should call your backend AI endpoint.<br />
+                Example: <code>POST /api/dank-santa/pfp</code> with the image + wallet address.
+              </p>
+            </div>
+
+            <div class="picture-preview" id="picturePreview">
+              <span style="font-size:13px; color:var(--muted); text-align:center; padding:0 10px;">
+                Your generated PFP will appear here. Right-click / long-press to save and flex it as your avatar.
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NFT COLLECTION SECTION -->
+    <section id="nft-collection">
+      <div class="section-header">
+        <div>
+          <div class="section-tag">NFT Collection</div>
+          <h2>Dank Santa NFT Drop 🎁</h2>
+        </div>
+        <p>Mint your spot on the list and flex your festive degeneracy in glorious PFP form.</p>
+      </div>
+
+      <div class="section-card">
+        <div class="section-card-inner nft-layout">
+          <div>
+            <div class="nft-links">
+              <!-- TODO: replace with real links -->
+              <a class="btn btn-ghost" href="#" target="_blank" rel="noopener">🚀 Public Mint on launchmynft</a>
+              <a class="btn btn-primary" href="#" target="_blank" rel="noopener">🎁 Holder Free Mint Claim</a>
+            </div>
+            <p class="nft-note">
+              Holders of 150,000+ $DSANTA get 1 free mint (one per wallet). Link your wallet and claim,
+              then trade or hodl your favorite trait combos.
+            </p>
+            <ul style="font-size:12px; color:var(--muted); margin-top:8px; padding-left:18px;">
+              <li>Elves, icy halos, golden crowns & dank accessories</li>
+              <li>Rarity-based airdrops and wheel-boosts for specific traits</li>
+              <li>Future utility hooks (raffles, boosts, allowlists)</li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="section-tag" style="margin-bottom:6px;">Recently Minted</div>
+            <div class="nft-grid" id="recentMintsGrid">
+              <!-- Example placeholder cards; replace with real data -->
+              <div class="nft-card">
+                <img src="https://placehold.co/300x300/f33/fff?text=DS+001" alt="NFT 1" />
+                <div class="nft-card-body">
+                  <div class="nft-card-title">#001 · Icy Halo</div>
+                  <div class="nft-card-owner">Owner: 8HkK...d9Fs</div>
+                </div>
+              </div>
+              <div class="nft-card">
+                <img src="https://placehold.co/300x300/3f3/fff?text=DS+002" alt="NFT 2" />
+                <div class="nft-card-body">
+                  <div class="nft-card-title">#002 · Candy Cane Crown</div>
+                  <div class="nft-card-owner">Owner: 6DqP...z1Lx</div>
+                </div>
+              </div>
+              <div class="nft-card">
+                <img src="https://placehold.co/300x300/33f/fff?text=DS+003" alt="NFT 3" />
+                <div class="nft-card-body">
+                  <div class="nft-card-title">#003 · Dank Glasses</div>
+                  <div class="nft-card-owner">Owner: 3PwR...k7Na</div>
+                </div>
+              </div>
+            </div>
+            <p class="nft-note" style="margin-top:8px;">
+              In production, this grid should pull live data from your mint API / LaunchMyNFT webhook.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NAUGHTY / NICE / DANK WHEEL GAME -->
+    <section id="wheel-game">
+      <div class="section-header">
+        <div>
+          <div class="section-tag">On-chain Game</div>
+          <h2>Naughty, Nice or DANK Wheel 🎡</h2>
+        </div>
+        <p>Bet $DSANTA. Naughty gets nothing, Nice doubles, DANK goes 5×.</p>
+      </div>
+
+      <div class="section-card">
+        <div class="section-card-inner wheel-layout">
+
+          <!-- WHEEL VISUAL -->
+          <div class="wheel-container">
+            <div class="wheel-outer">
+              <div class="wheel-inner" id="wheelInner"></div>
+              <div class="wheel-center">SPIN</div>
+              <div class="wheel-tick"></div>
+              <div class="wheel-labels">
+                <span class="lbl-naughty">NAUGHTY</span>
+                <span class="lbl-nice">NICE</span>
+                <span class="lbl-dank">DANK</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONTROLS + BANNER -->
+          <div class="wheel-controls">
+            <div class="field-row">
+              <label for="wagerInput">Wager Amount:</label>
+              <input type="number" min="1" step="1" id="wagerInput" placeholder="e.g. 10" />
+              <span style="font-size:12px;">$DSANTA</span>
+            </div>
+
+            <div class="field-row">
+              <span class="mode-pill" id="modePill">Demo Mode · Connect wallet to play for real $DSANTA</span>
+            </div>
+
+            <div class="field-row">
+              <button class="btn btn-primary" id="spinBtn">Spin the wheel</button>
+              <button class="btn btn-ghost" id="demoToggleBtn">Toggle Demo / Real</button>
+            </div>
+
+            <div class="wheel-status" id="wheelStatus">
+              In demo mode, results are simulated client-side. In real mode, call backend + on-chain tx here.
+            </div>
+
+            <div class="wheel-payouts" style="margin-top:10px;">
+              <strong>Payout logic:</strong>
+              <ul style="margin:4px 0 0 18px; padding:0;">
+                <li>Naughty – lose wager (0×)</li>
+                <li>Nice – win 2× wager (profit 1×)</li>
+                <li>Dank – win 5× wager (profit 4×, lowest odds)</li>
+              </ul>
+              <p style="margin-top:4px;">
+                In production, use a provably-fair backend, sign wagers on-chain, and settle in $DSANTA.
+              </p>
+            </div>
+
+            <!-- SCROLLING BANNER -->
+            <div class="banner">
+              <div class="banner-track" id="bannerTrack">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Background music, click effects, and all games are for festive, degen fun only. Gamble responsibly. 🎄
+    </footer>
+  </main>
+
+  <!-- BACKGROUND HOLIDAY MUSIC (supply your own mp3) -->
+  <audio id="bgMusic" loop>
+    <!-- Replace with your own file path -->
+    <source src="assets/dank-santa-theme.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- MAIN SCRIPT -->
+  <script>
+    // -----------------------
+    // UTILS
+    // -----------------------
+
+    function scrollToSection(selector) {
+      const el = document.querySelector(selector);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function shortAddress(addr) {
+      if (!addr || addr.length < 8) return addr || "";
+      return addr.slice(0, 4) + "..." + addr.slice(-4);
+    }
+
+    // -----------------------
+    // CONTRACT ADDRESS COPY
+    // -----------------------
+
+    const caBox = document.getElementById("caBox");
+    const caText = document.getElementById("caText");
+
+    caBox.addEventListener("click", async () => {
+      const text = caText.textContent.trim();
+      if (!navigator.clipboard) {
+        alert("Address: " + text);
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(text);
+        caBox.style.borderColor = "var(--accent-green)";
+        setTimeout(() => {
+          caBox.style.borderColor = "rgba(255,255,255,0.16)";
+        }, 1200);
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
+    // -----------------------
+    // WALLET INTEGRATION (FRONTEND ONLY – PHANTOM EXAMPLE)
+    // -----------------------
+
+    let connectedWallet = null;
+    let isHolder = false; // should be set from backend balance check
+
+    const connectWalletBtn = document.getElementById("connectWalletBtn");
+    const walletStatusEl = document.getElementById("walletStatus");
+
+    async function connectWallet() {
+      try {
+        const provider = window.solana;
+        if (!provider || !provider.isPhantom) {
+          alert("Phantom wallet not found. Please install Phantom (or integrate wallet adapter for more wallets).");
+          return;
+        }
+        const resp = await provider.connect();
+        connectedWallet = resp.publicKey.toString();
+        walletStatusEl.textContent = "Connected: " + shortAddress(connectedWallet);
+        connectWalletBtn.textContent = "Wallet Connected";
+
+        // TODO: call your backend to check actual $DSANTA balance.
+        // Example:
+        // const res = await fetch(`/api/balance/dsanta?wallet=${connectedWallet}`);
+        // const data = await res.json();
+        // isHolder = data.balance >= 150000;
+        // For now, simulate:
+        isHolder = true;
+
+        updateHolderUI();
+      } catch (e) {
+        console.error(e);
+        walletStatusEl.textContent = "Wallet connection failed";
+      }
+    }
+
+    function updateHolderUI() {
+      const pfpStatus = document.getElementById("pfpStatus");
+      if (connectedWallet && isHolder) {
+        pfpStatus.textContent = "Holder verified – you can generate your Dank Santa PFP.";
+      } else if (connectedWallet) {
+        pfpStatus.textContent = "Connected wallet doesn't meet 150,000 $DSANTA threshold.";
+      } else {
+        pfpStatus.textContent = "Connect your wallet and hold 150,000 $DSANTA to unlock.";
+      }
+    }
+
+    connectWalletBtn.addEventListener("click", connectWallet);
+
+    // -----------------------
+    // PFP LAB – UPLOAD + GENERATE (FRONTEND STUB)
+    // -----------------------
+
+    const uploadBtn = document.getElementById("uploadBtn");
+    const fileInput = document.getElementById("fileInput");
+    const uploadHint = document.getElementById("uploadHint");
+    const generatePfpBtn = document.getElementById("generatePfpBtn");
+    const picturePreview = document.getElementById("picturePreview");
+    const pfpStyle = document.getElementById("pfpStyle");
+
+    let uploadedFile = null;
+
+    uploadBtn.addEventListener("click", () => fileInput.click());
+
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files[0];
+      uploadedFile = file || null;
+      if (file) {
+        uploadHint.textContent = "Selected: " + file.name;
+      } else {
+        uploadHint.textContent = "No file selected yet.";
+      }
+    });
+
+    generatePfpBtn.addEventListener("click", async () => {
+      const pfpStatus = document.getElementById("pfpStatus");
+      if (!connectedWallet) {
+        pfpStatus.textContent = "Connect your wallet first.";
+        return;
+      }
+      if (!isHolder) {
+        pfpStatus.textContent = "This wallet doesn't meet the 150,000 $DSANTA requirement.";
+        return;
+      }
+      if (!uploadedFile) {
+        pfpStatus.textContent = "Please upload a selfie or avatar first.";
+        return;
+      }
+
+      pfpStatus.textContent = "Summoning Dank Santa... (this should call your backend AI service)";
+      generatePfpBtn.disabled = true;
+
+      // FRONTEND MOCK: show the uploaded image directly.
+      // In production, send the file to your backend, which calls your AI pipeline,
+      // then return the generated image URL/blob.
+      const reader = new FileReader();
+      reader.onload = () => {
+        picturePreview.innerHTML = "";
+        const img = document.createElement("img");
+        img.src = reader.result;
+        img.alt = "Generated PFP";
+        picturePreview.appendChild(img);
+        pfpStatus.textContent = "Mock preview shown. Wire this to your AI endpoint for real outputs.";
+        generatePfpBtn.disabled = false;
+      };
+      reader.onerror = () => {
+        pfpStatus.textContent = "Failed to read file.";
+        generatePfpBtn.disabled = false;
+      };
+      reader.readAsDataURL(uploadedFile);
+
+      // Example real flow:
+      // const formData = new FormData();
+      // formData.append("image", uploadedFile);
+      // formData.append("wallet", connectedWallet);
+      // formData.append("style", pfpStyle.value);
+      // const res = await fetch("/api/dank-santa/pfp", { method: "POST", body: formData });
+      // const data = await res.json();
+      // picturePreview.innerHTML = `<img src="${data.imageUrl}" alt="Dank Santa PFP" />`;
+    });
+
+    // -----------------------
+    // NFT RECENT MINTS – placeholder hook
+    // -----------------------
+
+    async function fetchRecentMints() {
+      // TODO: Replace this with a real call to LaunchMyNFT / your backend.
+      // const res = await fetch("/api/nfts/recent");
+      // const data = await res.json();
+      // renderRecentMints(data);
+    }
+
+    function renderRecentMints(nfts) {
+      const grid = document.getElementById("recentMintsGrid");
+      grid.innerHTML = "";
+      nfts.forEach(nft => {
+        const card = document.createElement("div");
+        card.className = "nft-card";
+        card.innerHTML = `
+          <img src="${nft.image}" alt="${nft.name}" />
+          <div class="nft-card-body">
+            <div class="nft-card-title">${nft.name}</div>
+            <div class="nft-card-owner">Owner: ${shortAddress(nft.owner)}</div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // -----------------------
+    // WHEEL GAME – DEMO LOGIC
+    // -----------------------
+
+    const wheelInner = document.getElementById("wheelInner");
+    const spinBtn = document.getElementById("spinBtn");
+    const wagerInput = document.getElementById("wagerInput");
+    const wheelStatus = document.getElementById("wheelStatus");
+    const modePill = document.getElementById("modePill");
+    const demoToggleBtn = document.getElementById("demoToggleBtn");
+
+    let isDemoMode = true;
+    let spinning = false;
+
+    demoToggleBtn.addEventListener("click", () => {
+      isDemoMode = !isDemoMode;
+      updateModePill();
+    });
+
+    function updateModePill() {
+      if (isDemoMode) {
+        modePill.textContent = "Demo Mode · Connect wallet to play for real $DSANTA";
+      } else {
+        modePill.textContent = "Real Mode (stub) · Use backend + tx to make this live";
+      }
+    }
+
+    updateModePill();
+
+    spinBtn.addEventListener("click", async () => {
+      if (spinning) return;
+      const wager = parseFloat(wagerInput.value || "0");
+      if (!Number.isFinite(wager) || wager <= 0) {
+        wheelStatus.textContent = "Enter a valid wager amount in $DSANTA.";
+        return;
+      }
+
+      if (!isDemoMode) {
+        if (!connectedWallet) {
+          wheelStatus.textContent = "Connect your wallet to spin in real mode.";
+          return;
+        }
+        // In real mode, you'd call your backend:
+        // const res = await fetch("/api/wheel/spin", { method:"POST", body: JSON.stringify({ wallet: connectedWallet, wager }) });
+        // const data = await res.json();
+        // const outcome = data.outcome; // "naughty" | "nice" | "dank"
+        // const angle = data.angle;
+        // animateWheel(angle, outcome, wager, false);
+      }
+
+      // DEMO: pick outcome based on simple probabilities
+      // Naughty: 60%, Nice: 30%, DANK: 10%
+      const r = Math.random();
+      let outcome;
+      if (r < 0.6) outcome = "naughty";
+      else if (r < 0.9) outcome = "nice";
+      else outcome = "dank";
+
+      // base angles for each segment (starting reference)
+      const baseAngles = {
+        naughty: 60, // center of top segment
+        nice: 180,   // bottom-left
+        dank: 300    // bottom-right
+      };
+
+      const base = baseAngles[outcome];
+      // multiply to get a few full spins
+      const extraSpins = 3 + Math.floor(Math.random() * 2);
+      const finalAngle = 360 * extraSpins + base;
+
+      animateWheel(finalAngle, outcome, wager, isDemoMode);
+    });
+
+    function animateWheel(angle, outcome, wager, demoMode) {
+      spinning = true;
+      wheelInner.style.transition = "transform 3s cubic-bezier(0.23, 1, 0.32, 1)";
+      wheelInner.style.transform = `rotate(${angle}deg)`;
+
+      let status;
+      if (outcome === "naughty") {
+        status = `Naughty! You lose your wager of ${wager} $DSANTA.`;
+      } else if (outcome === "nice") {
+        status = `Nice! You win 2× your wager: ${wager * 2} $DSANTA.`;
+      } else {
+        status = `DANK!! You win 5× your wager: ${wager * 5} $DSANTA.`;
+      }
+      wheelStatus.textContent = "Spinning...";
+
+      setTimeout(() => {
+        wheelStatus.textContent = (demoMode ? "[Demo] " : "[Real] ") + status;
+        spinning = false;
+        pushBannerEvent(outcome, wager);
+      }, 3000);
+    }
+
+    // -----------------------
+    // WIN/LOSS BANNER – MOCK EVENTS
+    // -----------------------
+
+    const bannerTrack = document.getElementById("bannerTrack");
+
+    const sampleAddrs = [
+      "4Hk3nFYuZ2pQ9FxRcv9dNg1sL9mA",
+      "8DqPL78s9vks1eGaFpZzCk3r1MnT",
+      "2Mx9sPq7Ytbk3QvwL1sD8a9Z0yKx",
+      "9FsK12pTqL90vNsZ7cW14rDpQzRq",
+      "3PwRjZc87nL0tVc5sDcQ9wPxkNa7"
+    ];
+
+    function randomAddr() {
+      return sampleAddrs[Math.floor(Math.random() * sampleAddrs.length)];
+    }
+
+    function pushBannerEvent(outcome, wager) {
+      const addr = shortAddress(randomAddr());
+      let text;
+      let cls;
+      if (outcome === "naughty") {
+        cls = "result-naughty";
+        text = `is on the naughty list and loses ${wager} $DSANTA.`;
+      } else if (outcome === "nice") {
+        cls = "result-nice";
+        text = `is on the nice list and just won ${wager * 2} $DSANTA!`;
+      } else {
+        cls = "result-dank";
+        text = `is DANK and won ${wager * 5} $DSANTA!!`;
+      }
+
+      const item = document.createElement("div");
+      item.className = "banner-item";
+      item.innerHTML = `<span class="addr">${addr}</span> <span class="${cls}">${text}</span>`;
+      bannerTrack.appendChild(item);
+
+      // keep items manageable
+      if (bannerTrack.children.length > 30) {
+        bannerTrack.removeChild(bannerTrack.firstChild);
+      }
+    }
+
+    // Seed the banner with some mock items
+    ["naughty", "nice", "dank", "nice", "naughty"].forEach((outcome, i) => {
+      setTimeout(() => pushBannerEvent(outcome, 10 + i * 5), 200 * i);
+    });
+
+    // -----------------------
+    // BACKGROUND MUSIC
+    // -----------------------
+
+    const bgMusic = document.getElementById("bgMusic");
+    const musicToggleBtn = document.getElementById("musicToggleBtn");
+    const musicDot = document.getElementById("musicDot");
+    let musicPlaying = false;
+
+    async function toggleMusic() {
+      if (!musicPlaying) {
+        try {
+          await bgMusic.play();
+          musicPlaying = true;
+          musicDot.classList.remove("paused");
+        } catch (e) {
+          console.error("Music play blocked:", e);
+        }
+      } else {
+        bgMusic.pause();
+        musicPlaying = false;
+        musicDot.classList.add("paused");
+      }
+    }
+
+    musicToggleBtn.addEventListener("click", toggleMusic);
+
+    // -----------------------
+    // CLICK / TAP FX SPRITES
+    // -----------------------
+
+    const sprites = ["🍬", "❄️", "🍪", "🎁", "🍭", "🎄"];
+
+    document.addEventListener("click", (e) => {
+      // ignore clicks on inputs & buttons to avoid annoyance
+      const tag = e.target.tagName.toLowerCase();
+      if (["input", "button", "select", "textarea"].includes(tag)) return;
+
+      const sprite = document.createElement("div");
+      sprite.className = "click-sprite";
+      sprite.textContent = sprites[Math.floor(Math.random() * sprites.length)];
+      sprite.style.left = e.clientX + "px";
+      sprite.style.top = e.clientY + "px";
+      document.body.appendChild(sprite);
+      setTimeout(() => sprite.remove(), 950);
+    });
+  </script>
+</body>
+</html>
