@@ -249,12 +249,12 @@ spinBtn.addEventListener("click", async () => {
     // animateWheel(angle, outcome, wager, false);
   }
 
-  // DEMO: pick outcome based on simple probabilities
-  // Naughty: 60%, Nice: 30%, DANK: 10%
+   // DEMO: pick outcome based on target odds
+  // Naughty: 49%, Nice: 49%, DANK: 2%
   const r = Math.random();
   let outcome;
-  if (r < 0.6) outcome = "naughty";
-  else if (r < 0.9) outcome = "nice";
+  if (r < 0.49) outcome = "naughty";
+  else if (r < 0.98) outcome = "nice";
   else outcome = "dank";
 
   // base angles for each segment (starting reference)
