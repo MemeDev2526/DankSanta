@@ -204,6 +204,7 @@ const wagerInput = document.getElementById("wagerInput");
 const wheelStatus = document.getElementById("wheelStatus");
 const modePill = document.getElementById("modePill");
 const demoToggleBtn = document.getElementById("demoToggleBtn");
+const wheelResultPop = document.getElementById("wheelResultPop");
 
 let isDemoMode = true;
 let spinning = false;
@@ -224,6 +225,34 @@ function updateModePill() {
 }
 
 updateModePill();
+
+function showWheelResultPop(outcome) {
+  if (!wheelResultPop) return;
+
+  // reset base class
+  wheelResultPop.className = "wheel-result-pop";
+
+  let label = "";
+  let extraClass = "";
+  if (outcome === "naughty") {
+    label = "NAUGHTY";
+    extraClass = "naughty";
+  } else if (outcome === "nice") {
+    label = "NICE";
+    extraClass = "nice";
+  } else {
+    label = "DANK";
+    extraClass = "dank";
+  }
+
+  wheelResultPop.textContent = label;
+
+  // force reflow so the animation can restart on repeated spins
+  void wheelResultPop.offsetWidth;
+
+  wheelResultPop.classList.add(extraClass);
+  wheelResultPop.classList.add("show");
+}
 
 spinBtn.addEventListener("click", async () => {
   if (spinning) return;
@@ -292,6 +321,7 @@ function animateWheel(angle, outcome, wager, demoMode) {
     wheelStatus.textContent = (demoMode ? "[Demo] " : "[Real] ") + status;
     spinning = false;
     pushBannerEvent(outcome, wager);
+    showWheelResultPop(outcome);
   }, 3000);
 }
 
