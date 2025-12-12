@@ -288,7 +288,23 @@
               <p style="margin-top:4px;">
                 In production, use a provably-fair backend, sign wagers on-chain, and settle in $DSANTA.
               </p>
-            </div>
+              <div class="fairness-box">
+                <div class="fairness-header">Provably fair (example stub)</div>
+                <p>
+                  Every spin is derived from a verifiable server seed + client seed + nonce.
+                  After a round, you can check the hash and recompute the result yourself.
+                </p>
+                <button class="btn btn-ghost" id="fairnessBtn">Show example proof</button>
+                <pre id="fairnessDetails" class="fairness-details" hidden>
+              serverSeedHash:  0xabc123...
+              clientSeed:      wallet: 8HkK...d9Fs
+              nonce:           42
+              spinResult:      "nice"
+                </pre>
+                <p style="margin-top:4px;">
+                  In production, fetch this from <code>/api/wheel/proof</code> with the spin ID.
+                </p>
+              </div>
 
             <!-- SCROLLING BANNER -->
             <div class="banner">
