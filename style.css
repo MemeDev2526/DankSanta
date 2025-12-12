@@ -585,9 +585,9 @@ section {
   border-radius: 50%;
   /* flat segments, no neon */
   background: conic-gradient(
-    #f1483c 0 120deg,       /* Naughty red */
-    #2ebf73 120deg 240deg,  /* Nice green */
-    #f6c645 240deg 360deg   /* DANK gold */
+    #f1483c 0deg 176deg,     /* Naughty ~48.9% */
+    #2ebf73 176deg 352deg,   /* Nice ~48.9% */
+    #f6c645 352deg 360deg    /* DANK ~2.2% */
   );
   transition: transform 3s cubic-bezier(0.23, 1, 0.32, 1);
 }
