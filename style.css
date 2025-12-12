@@ -702,6 +702,33 @@ section {
   color: var(--ds-text-muted);
 }
 
+.fairness-box {
+  margin-top: 10px;
+  border-radius: 18px;
+  border: 2px dashed #000000;
+  background: #fff7eb;
+  padding: 10px 12px;
+  font-size: 11px;
+  color: var(--ds-text-dark);
+}
+
+.fairness-header {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.fairness-details {
+  background: #000000;
+  color: #f7ead5;
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 11px;
+  margin-top: 6px;
+  overflow-x: auto;
+}
+
 /* Banner */
 
 .banner {
