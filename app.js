@@ -345,6 +345,27 @@ function pushBannerEvent(outcome, wager) {
 });
 
 // -----------------------
+// PROVABLY FAIR TOGGLE (UI STUB)
+// -----------------------
+
+const fairnessBtn = document.getElementById("fairnessBtn");
+const fairnessDetails = document.getElementById("fairnessDetails");
+
+if (fairnessBtn && fairnessDetails) {
+  fairnessBtn.addEventListener("click", () => {
+    const isHidden = fairnessDetails.hasAttribute("hidden");
+    if (isHidden) {
+      fairnessDetails.removeAttribute("hidden");
+      fairnessBtn.textContent = "Hide example proof";
+    } else {
+      fairnessDetails.setAttribute("hidden", "");
+      fairnessBtn.textContent = "Show example proof";
+    }
+  });
+}
+
+
+// -----------------------
 // BACKGROUND MUSIC
 // -----------------------
 
